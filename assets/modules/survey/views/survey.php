@@ -2,17 +2,12 @@
 <?php /** @var array $survey */ ?>
 <?php /** @var array $options */ ?>
 <?php /** @var Surveys $app */ ?>
-<div class="survey_options">
+<div class="survey__options">
     <?php foreach ($options as $o): ?>
     <?php $t = $app->calculateRate($survey['votes'], $o['votes']) ?>
-    <div class="option">
-        <div class="opt_title"><?= $o['title'] ?>: <span><?= $t ?>% (<?= $o['votes'] ?>)</span>
-        </div>
-        <?php if ($o['votes']): ?>
-            <div class="opt_progress">
-                <span style="width:<?= $t ?>%"></span>
-            </div>
-        <?php endif ?>
+    <div class="survey__option">
+        <div class="survey__option_title"><?= $o['title'] ?>: <span><?= $t ?>% (<?= $o['votes'] ?>)</span></div>
+        <div class="survey__option_progress"><span style="width:<?= $t ?>%"></span></div>
     </div>
     <?php endforeach ?>
 </div>

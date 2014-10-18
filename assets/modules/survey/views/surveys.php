@@ -1,54 +1,49 @@
 <?php defined('MODX_BASE_PATH') or die('Error'); ?>
 <?php /** @var Surveys $app */ ?>
 <?php /** @var array $surveys */ ?>
-<div class="surveys_container">
-    <?php foreach ($surveys as $k => $s): ?>
+<div class="surveys">
+    <?php foreach ($surveys as $s): ?>
     <div id="survey_<?= $s['id'] ?>" class="survey">
-        <h4><?= $s['title'] ?></h4>
+        <div class="survey__header"><?= $s['title'] ?></div>
         <?php if (!empty($s['description'])): ?>
-        <div class="survey_desc"><?= $s['description'] ?></div>
+        <div class="survey__desc"><?= $s['description'] ?></div>
         <?php endif ?>
-        <div class="survey_content">
+        <div class="survey__content">
             <?php if (!$s['voted']): ?>
             <form action="<?= $action ?>" method="get" onsubmit="return Survey.vote(this)">
                 <input type="hidden" name="survey" value="<?= $s['id'] ?>"/>
-                <div class="survey_options">
-                    <ul>
+                <div class="survey__options">
+                    <ul class="survey__options_list">
                     <?php foreach ($s['options'] as $o): ?>
-                    <li>
-                        <label>
-                            <input type="radio" name="option" value="<?= $o['id'] ?>"/><span><?= $o['title'] ?></span>
-                        </label>
-                    </li>
+                        <li class="survey__options_list_item">
+                            <label>
+                                <input type="radio" name="option" value="<?= $o['id'] ?>"/><span><?= $o['title'] ?></span>
+                            </label>
+                        </li>
                     <?php endforeach ?>
                     </ul>
                 </div>
-                <div class="survey_buttons">
-                    <button type="submit" class="button survey_vote">Голосовать</button>
+                <div class="survey__buttons">
+                    <button type="submit" class="survey__button survey__button--vote">Голосовать</button>
                 </div>
             </form>
             <?php else: ?>
-            <div class="survey_options">
+            <div class="survey__options">
                 <?php foreach ($s['options'] as $o): ?>
                 <?php $t = $app->calculateRate($s['votes'], $o['votes']) ?>
-                <div class="option">
-                    <div class="opt_title"><?= $o['title'] ?>: <span><?= $t ?>% (<?= $o['votes'] ?>)</span>
-                    </div>
-                    <div class="opt_progress">
-                        <span style="width:<?= $t ?>%"></span>
-                    </div>
+                <div class="survey__option">
+                    <div class="survey__option_title"><?= $o['title'] ?>: <span><?= $t ?>% (<?= $o['votes'] ?>)</span></div>
+                    <div class="survey__option_progress"><span style="width:<?= $t ?>%"></span></div>
                 </div>
                 <?php endforeach ?>
             </div>
-            <?php if ($app->isAdmin()): ?>
-            <div class="survey_buttons">
-                <button type="button" class="button survey_vote" onclick="Survey.info(<?= $s['id'] ?>, this)">
-                    Информация
-                </button>
-            </div>
-            <?php endif ?>
             <?php endif ?>
         </div>
+        <?php if ($app->isAdmin()): ?>
+            <div class="survey__buttons">
+                <button type="button" class="survey__button survey__button--info" onclick="Survey.info(<?= $s['id'] ?>, this)">Информация</button>
+            </div>
+        <?php endif ?>
     </div>
     <?php endforeach ?>
 </div>

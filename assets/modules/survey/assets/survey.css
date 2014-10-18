@@ -1,116 +1,77 @@
-.survey h4 {
-    color: #742520;
-    font-size: 1.2em;
-    margin: 0 0 10px;
+.surveys {
+    max-width: 500px;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.8em;
+    padding: 3px;
 }
 .survey {
     box-shadow: 1px 1px 2px #aaa;
     margin-bottom: 12px;
     padding: 10px;
 }
-.survey_content {
+.survey__header {
+    color: #742520;
+    font-size: 1.2em;
+    margin: 0 0 10px;
 }
-.survey_desc {
+.survey__content {
+}
+.survey__option {
+    margin-bottom: 10px;
+}
+.survey__desc {
     background-color: #f1f1f1;
     color: #777;
     font-size: 0.9em;
     margin: 0 -10px 10px;
     padding: 5px 10px;
 }
-.surveys_container {
-    max-width: 500px;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 0.8em;
-    padding: 3px;
-}
-.survey_buttons {
+.survey__buttons {
     text-align: center;
 }
-.survey_about {
-    font-style: italic;
-    text-align: center;
-}
-.survey_num > span {
-    background: none repeat scroll 0 0 #fff;
-    border-radius: 50px;
-    color: #dea58a;
-    display: block;
-    float: left;
-    font-size: 28px;
-    height: 35px;
-    line-height: 34px;
-    margin: 0 15px 0 0;
-    text-align: center;
-    width: 35px;
-}
-.survey_vote {
+.survey__button {
     font-size: 16px;
     height: 36px;
     margin: 8px 0;
+}
+.survey__button--vote {
     width: 140px;
 }
-.survey_options input {
+.survey__options input {
     float: left;
     margin: 4px 0 0;
 }
-.survey_options > ul {
+.survey__options_list {
     list-style: none outside none;
     margin: 15px 0;
     padding: 0;
     width: 300px;
 }
-.survey_options li {
+.survey__options_list_item {
     font-size: 14px;
     margin-bottom: 8px;
 }
-.survey_options label > span {
+.survey__options label > span {
     display: block;
     overflow: hidden;
     padding-left: 12px;
 }
-.survey_info_modal {
-    background: none repeat scroll 0 0 #efccb9;
-    border-radius: 10px;
-    padding: 20px;
-    position: relative;
-    width: 530px;
-}
-.survey_info_modal h4 {
-    font-size: 18px;
-    margin: 0 0 20px;
-}
-.opt_progress {
+.survey__option_progress {
     background-color: #eee;
     height: 11px;
     margin-top: 2px;
 }
-.opt_progress > span {
+.survey__option_progress > span {
     background-color: #8e8b46;
     display: block;
     height: 11px;
 }
-.opt_title {
+.survey__option_title {
     font-weight: bold;
 }
-.opt_title span {
+.survey__option_title span {
     display: inline;
     font-weight: normal;
     padding: 0;
     white-space: nowrap;
-}
-.survey_info .option {
-    margin-bottom: 5px;
-}
-.survey_info .buttons {
-    text-align: center;
-    margin-left: 10px;
-    font-size: 14px;
-}
-.opt_users > ul {
-    list-style: decimal outside none;
-    margin: 10px 0 0;
-    padding: 0 0 0 30px;
-}
-.survey_options .option {
-    margin-bottom: 10px;
 }
