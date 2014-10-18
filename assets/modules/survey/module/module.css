@@ -1,0 +1,129 @@
+body {
+    padding: 10px 0;
+}
+
+table th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px 0;
+}
+
+.sectContent {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+ul.actionButtons:after {
+    clear: both;
+    content: "";
+    display: block;
+    float: none;
+}
+
+ul.actionButtons {
+    margin: 10px 0;
+    padding: 0;
+    min-height: inherit;
+}
+
+.options ul > li span {
+    font-size: 25px;
+    line-height: 10px;
+    vertical-align: -3px;
+    cursor: default;
+}
+
+form .options input + input {
+    padding: 4px 0;
+    text-align: center;
+    width: 30px;
+}
+
+form textarea {
+    height: 75px;
+    width: 350px;
+    max-width: 350px;
+}
+
+form input[type="text"] {
+    width: 350px;
+}
+
+.options > ul {
+    list-style: none outside none;
+    margin: 0;
+}
+
+.options > ul li {
+    list-style: none outside none;
+    margin: 0 0 5px;
+}
+
+button {
+    background: linear-gradient(#F5F5F5, #DDDDDD) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #008000;
+    border-radius: 3px;
+    cursor: pointer;
+    font: normal 12px Arial,sans-serif,monospace;
+    line-height: normal;
+    margin: 0 5px 3px 0;
+    min-height: 27px;
+    overflow: visible;
+    padding: 5px 2px 4px;
+    width: auto;
+}
+
+button img {
+    vertical-align: middle;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.fields {
+    border-collapse: collapse;
+    vertical-align: top;
+}
+
+.fields td {
+    vertical-align: top;
+}
+
+.fields label {
+    display: block;
+    font-weight: bold;
+}
+
+.fields div {
+    margin-bottom: 10px;
+}
+
+input[type="text"], textarea {
+    font: 12px Tahoma;
+}
+
+.options {
+    margin-left: 50px;
+}
+
+.preview > img {
+    border: 1px solid #AAAAAA !important;
+    padding: 3px;
+    width: 276px;
+}
+
+.action_buttons > a {
+    border-right: 1px solid;
+    margin-right: 3px;
+    padding-right: 4px;
+}
+
+.action_buttons > a:last-child {
+    border-right: medium none;
+    margin-right: 0;
+    padding-right: 0;
+}
