@@ -1,4 +1,4 @@
-<?php
+<?php defined('MODX_BASE_PATH') or die('Error');
 /** @var DocumentParser $modx */
 require_once __DIR__ . '/surveys.class.php';
 

@@ -1,3 +1,4 @@
+<?php defined('MODX_BASE_PATH') or die('Error'); ?>
 <div class="survey-menu">
     <ul class="actionButtons">
     <?php if ($app->isInstalled()): ?>

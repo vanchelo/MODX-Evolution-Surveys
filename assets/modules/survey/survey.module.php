@@ -2,7 +2,7 @@
 
 /** @var DocumentParser $modx */
 
-require __DIR__ . '/surveys.class.php';
+require 'surveys.class.php';
 $survey = new Surveys($modx);
 
 $action = isset($_GET['action']) ? (string) $_GET['action'] : '';

@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(__DIR__)) . '/libs/component.class.php';
+require_once 'libs/component.class.php';
 
 class Surveys extends Component
 {
@@ -23,7 +23,7 @@ class Surveys extends Component
      * Таблица вариантов ответов для опросов
      */
     protected $options_tbl;
-    protected $config = array();
+    protected $config = [];
 
     function __construct(DocumentParser & $modx)
     {
@@ -38,6 +38,7 @@ class Surveys extends Component
         $this->config['path'] = __DIR__ . '/';
         $this->config['relativePath'] = 'assets/snippets/survey/';
         $this->config['assetsUrl'] = MODX_BASE_URL . $this->config['relativePath'];
+        $this->config['viewsDir'] = __DIR__ . '/views/';
     }
 
     /**
@@ -74,24 +75,29 @@ class Surveys extends Component
             }
         }
 
-        $action = $this->modx->makeUrl($this->modx->documentObject['id']);
+        if ($this->modx->documentObject['id'] == $this->modx->config['site_start']) {
+            $action = '/';
+        } else {
+            $action = $this->modx->makeUrl($this->modx->documentObject['id']);
+        }
 
+        $this->modx->regClientHTMLBlock('<script>window.jQuery || document.write(\'<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">\x3C/script>\');</script>');
         $this->modx->regClientStartupHTMLBlock('<link rel="stylesheet" href="/assets/modules/survey/assets/survey.css"/>');
         $this->modx->regClientHTMLBlock('<script src="/assets/modules/survey/assets/survey.js"></script>');
         $this->modx->regClientHTMLBlock('<script>var Survey = new Surveys("' . $action . '");</script>');
 
         $tpl = !empty($tpl) && is_string($tpl) ? $tpl : 'surveys';
 
-        return $this->view($tpl, array(
+        return $this->view($tpl, [
             'surveys' => $surveys,
             'options' => $options,
             'action' => $action
-        ));
+        ]);
     }
 
     public function handle()
     {
-        if ($this->helper()->isAjax()) {
+        if ($this->help->isAjax()) {
             echo $this->vote(
                 isset($_GET['survey']) ? $_GET['survey'] : null,
                 isset($_GET['option']) ? $_GET['option'] : null
@@ -140,12 +146,12 @@ class Surveys extends Component
             return $this->error($this->t('add_vote_error'));
         }
 
-        return $this->success($this->t('success_voted'), array(
-            'html' => $this->view('survey', array(
+        return $this->success($this->t('success_voted'), [
+            'html' => $this->view('survey', [
                 'survey' => $this->getActiveSurvey($survey_id, 'id, votes'),
                 'options' => $this->getSurveyOptions($survey_id)
-            ))
-        ));
+            ])
+        ]);
     }
 
     public function resetSurvey($id)
@@ -155,11 +161,11 @@ class Surveys extends Component
         }
 
         $this->db->delete($this->answers_tbl, "survey_id = {$id}");
-        $this->db->update(array('votes' => 0), $this->options_tbl, "survey_id = {$id}");
-        $this->db->update(array(
+        $this->db->update(['votes' => 0], $this->options_tbl, "survey_id = {$id}");
+        $this->db->update([
             'votes' => 0,
             'updated_at' => $this->getTimestamp()
-        ), $this->surveys_tbl, "id = {$id}");
+        ], $this->surveys_tbl, "id = {$id}");
 
         return $this->success($this->t('success_reset'));
     }
@@ -176,12 +182,12 @@ class Surveys extends Component
     {
         $user_id = $this->modx->getLoginUserID();
 
-        $id = $this->db->insert(array(
+        $id = $this->db->insert([
             'survey_id' => $survey_id,
             'user_id' => $user_id,
             'option_id' => $option_id,
             'created_at' => $this->getTimestamp(),
-        ), $this->answers_tbl);
+        ], $this->answers_tbl);
 
         if (!$id) {
             return null;
@@ -319,7 +325,7 @@ class Surveys extends Component
     {
         $query = $this->db->select('*', $this->surveys_tbl);
 
-        $surveys = array();
+        $surveys = [];
         while ($row = $this->db->getRow($query)) {
             $surveys[] = $row;
         }
@@ -340,7 +346,7 @@ class Surveys extends Component
         $order = $random ? 'RAND()' : 'created_at DESC';
         $query = $this->db->select('*', $this->surveys_tbl, 'active=1 and closed_at IS NULL', $order, (int) $limit);
 
-        $surveys = array();
+        $surveys = [];
         while ($survey = $this->db->getRow($query)) {
             $surveys[$survey['id']] = $survey;
         }
@@ -355,15 +361,15 @@ class Surveys extends Component
      *
      * @return array
      */
-    public function getSurveyOptions($ids = array())
+    public function getSurveyOptions($ids = [])
     {
         if (!is_array($ids)) {
-            $ids = array($ids);
+            $ids = [$ids];
         }
 
         $query = $this->db->select('*', $this->options_tbl, 'survey_id IN (' . implode(',', $ids) . ')', 'sort ASC');
 
-        $options = array();
+        $options = [];
         if (count($ids) === 1) {
             while ($row = $this->db->getRow($query)) {
                 $options[] = $row;
@@ -371,7 +377,7 @@ class Surveys extends Component
         } else {
             while ($row = $this->db->getRow($query)) {
                 if (!isset($options[$row['survey_id']])) {
-                    $options[$row['survey_id']] = array();
+                    $options[$row['survey_id']] = [];
                 }
                 $options[$row['survey_id']][] = $row;
             }
@@ -387,11 +393,11 @@ class Surveys extends Component
      *
      * @return string
      */
-    public function createSurvey($data = array())
+    public function createSurvey($data = [])
     {
         $this->help->cleanArray($data);
 
-        $errors = array();
+        $errors = [];
         if (empty($data['title'])) {
             $errors[] = 'Введите название опроса';
         }
@@ -404,20 +410,20 @@ class Surveys extends Component
             return $this->error('Исправьте ошибки и повторите попытку', $errors);
         }
 
-        $id = $this->db->insert(array(
+        $id = $this->db->insert([
             'title' => $data['title'],
             'description' => !empty($data['description']) ? $data['description'] : null,
             'active' => isset($data['active']) ? 1 : 0,
             'created_at' => $this->getTimestamp(),
             'updated_at' => $this->getTimestamp()
-        ), $this->surveys_tbl);
+        ], $this->surveys_tbl);
 
         foreach ($data['new_option'] as $k => $o) {
-            $this->db->insert(array(
+            $this->db->insert([
                 'title' => $o,
                 'sort' => isset($data['new_option_sort'][$k]) ? (int) $data['new_option_sort'][$k] : $k,
                 'survey_id' => $id
-            ), $this->options_tbl);
+            ], $this->options_tbl);
         }
 
         return $this->success('Опрос успешно создан');
@@ -430,11 +436,11 @@ class Surveys extends Component
      *
      * @return string
      */
-    public function updateSurvey($data = array())
+    public function updateSurvey($data = [])
     {
         $this->help->cleanArray($data);
 
-        $errors = array();
+        $errors = [];
 
         if (empty($data['survey']) || !$id = (int) $data['survey']) {
             $errors[] = 'Не корректный ID опроса';
@@ -444,12 +450,12 @@ class Surveys extends Component
             $errors[] = 'Введите название опроса';
         }
 
-        $options = array();
+        $options = [];
         if (isset($data['option']) && is_array($data['option'])) {
             $options = $data['option'];
         }
 
-        $new_options = array();
+        $new_options = [];
         if (isset($data['new_option']) && is_array($data['new_option'])) {
             $new_options = $data['new_option'];
         }
@@ -466,22 +472,22 @@ class Surveys extends Component
             return $this->error($this->t('not_exist'));
         }
 
-        $this->db->update(array(
+        $this->db->update([
             'title' => $data['title'],
             'description' => $data['description'],
             'active' => isset($data['active']) ? 1 : 0,
             'updated_at' => $this->getTimestamp(),
-        ), $this->surveys_tbl, "id={$id}");
+        ], $this->surveys_tbl, "id={$id}");
 
         $options = $this->getSurveyOptions($id);
 
         foreach ($options as $o) {
             $oid = 'id_' . $o['id'];
             if (isset($data['option'][$oid])) {
-                $this->db->update(array(
+                $this->db->update([
                     'title' => $data['option'][$oid],
                     'sort' => isset($data['option_sort'][$oid]) ? $data['option_sort'][$oid] : $o['sort']
-                ), $this->options_tbl, "id={$o['id']}");
+                ], $this->options_tbl, "id={$o['id']}");
             } else {
                 $this->db->delete($this->options_tbl, "id={$o['id']}");
                 $this->db->delete($this->answers_tbl, "option_id={$o['id']}");
@@ -493,11 +499,11 @@ class Surveys extends Component
 
         if (isset($data['new_option']) && count($data['new_option'])) {
             foreach ($data['new_option'] as $k => $o) {
-                $this->db->insert(array(
+                $this->db->insert([
                     'title' => $o,
                     'sort' => isset($data['new_option_sort'][$k]) ? (int) $data['new_option_sort'][$k] : $k,
                     'survey_id' => $id
-                ), $this->options_tbl);
+                ], $this->options_tbl);
             }
         }
 
@@ -575,9 +581,9 @@ class Surveys extends Component
         $options = $this->getSurveyOptions($id);
         $users = $this->getSurveyUsersById($id);
 
-        return $this->success('', array(
+        return $this->success('', [
             'html' => $this->view('info', compact('survey', 'options', 'users'))
-        ));
+        ]);
     }
 
     /**
@@ -589,35 +595,19 @@ class Surveys extends Component
      */
     protected function getSurveyUsersById($id)
     {
-        $users = array();
+        $users = [];
 
         $query = $this->db->query("SELECT a.user_id, a.option_id, u.fullname as name FROM {$this->answers_tbl} as a LEFT JOIN {$this->modx->getFullTableName('web_user_attributes')} as u ON u.internalKey = a.user_id WHERE a.survey_id = {$id}");
 
         while ($row = $this->db->getRow($query)) {
             if (!isset($users[$row['option_id']])) {
-                $users[$row['option_id']] = array();
+                $users[$row['option_id']] = [];
             }
 
             $users[$row['option_id']][$row['user_id']] = $row['name'];
         }
 
         return $users;
-    }
-
-    /**
-     * Проверка на принадлежность авторизованного пользователя к менеджерам
-     *
-     * @return bool
-     */
-    public function isManager()
-    {
-        if (isset($this->isManager)) {
-            return $this->isManager;
-        }
-
-        $this->isManager = $this->help->isMemberOfGroup(self::MANAGERS_GROUP);
-
-        return $this->isManager;
     }
 
     public function isAdmin()
@@ -655,12 +645,12 @@ class Surveys extends Component
      *
      * @return string|View
      */
-    public function view($tpl = null, $data = array())
+    public function view($tpl = null, $data = [])
     {
         static $view;
         if (!isset($view)) {
-            require_once dirname(dirname(__DIR__)) . '/libs/view.class.php';
-            $view = new View(__DIR__ . '/views/');
+            require_once 'libs/view.class.php';
+            $view = new View($this->config['viewsDir']);
             $view->share('app', $this);
             $view->share('modx', $this->modx);
         }
@@ -679,7 +669,7 @@ class Surveys extends Component
 
     public function isInstalled()
     {
-        return file_exists(__DIR__ . '/setup.sql') ? false : true;
+        return file_exists($this->config['path'] . 'setup.sql') ? false : true;
     }
 
     public function install()
@@ -694,11 +684,11 @@ class Surveys extends Component
 
         $sql = str_replace('{prefix}', $tbl_prefix, file_get_contents($sqlfile));
 
-        $matches = array();
+        $matches = [];
         preg_match_all('/CREATE TABLE.*?;/ims', $sql, $matches);
 
-        $this->modx->db->query('SET AUTOCOMMIT=0;');
-        $this->modx->db->query('START TRANSACTION;');
+        $this->db->query('SET AUTOCOMMIT=0;');
+        $this->db->query('START TRANSACTION;');
         $errors = false;
 
         foreach ($matches[0] as $sqlcmd) {
