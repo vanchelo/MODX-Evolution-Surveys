@@ -22,38 +22,10 @@ function Surveys(url) {
 
         return false;
     };
-
-    this.info = function (id, btn) {
-        var $btn = jQuery(btn);
-
-        jQuery.ajax({
-            url: this.url,
-            type: 'get',
-            data: {
-                survey: id,
-                a: 'info'
-            },
-            dataType: 'json',
-            success: function (d) {
-                if (d.error) {
-                    alert(d.message);
-                    return;
-                }
-
-                if (d.data && d.data.html) {
-                    jQuery.arcticmodal({
-                        content: jQuery(d.data.html)
-                    });
-                }
-            }
-        });
-
-        return false;
-    };
 }
 
 (function () {
-    $.fn.serializeObject = function () {
+    $.fn.serializeObject = $.fn.serializeObject || function () {
         var o = {};
         var a = this.serializeArray();
         $.each(a, function() {

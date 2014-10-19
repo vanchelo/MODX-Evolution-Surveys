@@ -102,3 +102,25 @@ input[type="text"], textarea {
 	margin-right: 0;
 	padding-right: 0;
 }
+.opt_progress {
+	background-color: #eee;
+	height: 6px;
+}
+.opt_progress > span {
+	background-color: green;
+	display: block;
+	height: 100%;
+}
+.opt_users {
+	border-bottom: 1px dotted #ddd;
+	margin: 10px 0;
+	padding-bottom: 10px;
+}
+.option:last-child .opt_users {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+.option {
+	margin-top: 10px;
+}

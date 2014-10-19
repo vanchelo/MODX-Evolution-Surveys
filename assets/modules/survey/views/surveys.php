@@ -9,7 +9,7 @@
         <div class="survey__desc"><?= $s['description'] ?></div>
         <?php endif ?>
         <div class="survey__content">
-            <?php if (!$s['voted']): ?>
+            <?php if (!$s['voted'] && !$s['closed_at']): ?>
             <form action="<?= $action ?>" method="get" onsubmit="return Survey.vote(this)">
                 <input type="hidden" name="survey" value="<?= $s['id'] ?>"/>
                 <div class="survey__options">
@@ -39,10 +39,8 @@
             </div>
             <?php endif ?>
         </div>
-        <?php if ($app->isAdmin()): ?>
-            <div class="survey__buttons">
-                <button type="button" class="survey__button survey__button--info" onclick="Survey.info(<?= $s['id'] ?>, this)">Информация</button>
-            </div>
+        <?php if ($s['closed_at']): ?>
+        <div class="survey__status">Голосвание окончено</div>
         <?php endif ?>
     </div>
     <?php endforeach ?>

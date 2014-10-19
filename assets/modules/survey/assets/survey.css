@@ -75,3 +75,7 @@
     padding: 0;
     white-space: nowrap;
 }
+.survey__status {
+    font-size: 1.1em;
+    text-align: center;
+}
