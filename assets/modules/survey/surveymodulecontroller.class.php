@@ -45,7 +45,7 @@ class SurveyModuleController
         $create = $this->app->createSurvey($_POST);
 
         if (is_array($create)) {
-            $this->response->setMessage($this->app->t('submit_error'))->isError();
+            $this->response->setMessage($this->app->t('submit_error'))->setErrors($create);
         } else {
             $this->response->setMessage($this->app->t('success_created'));
         }
@@ -57,7 +57,7 @@ class SurveyModuleController
         $save = $this->app->updateSurvey($_POST);
 
         if (is_array($save)) {
-            $this->response->setErrors($save)->setMessage('submit_error');
+            $this->response->setErrors($save)->setMessage($this->app->t('submit_error'));
         } else {
             $this->response->isError(!$save)->setMessage($this->app->t(
                 !$save ? 'not_exist' : 'success_updated'
