@@ -1,4 +1,6 @@
 function Surveys(url) {
+    this.url = url || '/assets/modules/survey/connector.php';
+
     this.vote = function (form) {
         var $form = jQuery(form),
             data = $form.serializeObject();
@@ -13,10 +15,10 @@ function Surveys(url) {
             data: data,
             dataType: 'json',
             success: function (respone) {
-                alert(respone.message);
-                if (respone.data.html) {
-                    $form.parent().html(respone.data.html)
+                if (respone.html) {
+                    $form.parent().html(respone.html)
                 }
+                alert(respone.message);
             }
         });
 

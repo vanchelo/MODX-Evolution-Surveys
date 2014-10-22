@@ -10,6 +10,7 @@ class Survey
     public $created_at;
     public $updated_at;
     public $closed_at;
+    public $voted = false;
     public $options = array();
 
     function __construct(array $attributes = array())

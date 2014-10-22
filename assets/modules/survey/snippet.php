@@ -2,6 +2,13 @@
 /** @var DocumentParser $modx */
 require_once 'surveys.class.php';
 
-$survey = new Surveys($modx);
+$id = isset($id) ? (int) $id : null;
+$tpl = isset($tpl) ? $tpl : 'surveys';
+$limit = isset($limit) ? (int) $limit : 10;
+$random = isset($random) ? (bool) $random : false;
 
-return $survey->handle();
+$survey = new Surveys($modx, array(
+    'lang' => isset($lang) ? $lang : 'ru'
+));
+
+return $survey->render($id, $tpl, $limit, $random);

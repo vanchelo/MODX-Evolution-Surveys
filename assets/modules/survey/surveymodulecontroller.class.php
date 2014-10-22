@@ -22,7 +22,7 @@ class SurveyModuleController
             $title = $this->app->t('surveys');
         } else {
             $tpl = 'module.install';
-            $title = $this->app->t('install');
+            $title = $this->app->t('installing');
         }
 
         return $this->app->view('module.layout', array(
@@ -136,7 +136,7 @@ class SurveyModuleController
             'content' => $this->app->view('module.install', array(
                 'message' => $install
             )),
-            'title' => $this->app->t('install'),
+            'title' => $this->app->t('installing'),
         ));
     }
 
@@ -146,13 +146,9 @@ class SurveyModuleController
             return null;
         }
 
-        $survey = $this->app->getSurveyWithOptions($id);
-        $users = $this->app->getSurveyUsersById($id);
-
         return $this->app->view('module.layout', array(
             'content' => $this->app->view('module.info', array(
-                'survey' => $survey,
-                'users' => $users,
+                'survey' => $this->app->getSurveyWithRelations($id),
             )),
             'title' => $this->app->t('survey_info'),
         ));

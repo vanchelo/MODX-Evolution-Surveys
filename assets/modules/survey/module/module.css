@@ -93,9 +93,11 @@ input[type="text"], textarea {
 	width: 276px;
 }
 .action_buttons > a {
-	border-right: 1px solid;
-	margin-right: 3px;
-	padding-right: 4px;
+	font-size: 24px;
+	line-height: 24px;
+	padding-right: 1px;
+	text-decoration: none;
+	text-rendering: unset;
 }
 .action_buttons > a:last-child {
 	border-right: medium none;
@@ -123,4 +125,22 @@ input[type="text"], textarea {
 }
 .option {
 	margin-top: 10px;
+}
+#tabTemplate tbody td, .sectionBody td, .sectionBody th {
+	line-height: normal;
+	padding: 1px 5px;
+	text-align: left;
+	vertical-align: middle;
+}
+.sectionBody th {
+	background-color: transparent;
+	padding: 6px 7px;
+	vertical-align: middle;
+	border-bottom: 1px solid #555;
+}
+thead {
+	background-color: transparent;
+}
+.survey td {
+	vertical-align: top;
 }

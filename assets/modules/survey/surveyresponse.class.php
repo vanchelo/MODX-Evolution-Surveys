@@ -106,4 +106,11 @@ class SurveyResponse
 
         return $this;
     }
+
+    public function display()
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        echo $this->toJson();
+        return null;
+    }
 }

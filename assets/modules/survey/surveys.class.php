@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 
 require_once 'helpers.php';
 
@@ -40,35 +40,39 @@ class Surveys
      */
     protected $config = array();
 
-    function __construct(DocumentParser & $modx)
+    function __construct(DocumentParser & $modx, array $config = array())
     {
         $this->modx =& $modx;
         $this->db =& $modx->db;
-
-        $this->lang = require dirname(__FILE__) . '/lang/ru.php';
 
         $this->surveys_tbl = $modx->getFullTableName('surveys');
         $this->answers_tbl = $modx->getFullTableName('survey_answers');
         $this->options_tbl = $modx->getFullTableName('survey_options');
 
-        $this->config['path'] = __DIR__ . '/';
-        $this->config['relativePath'] = 'assets/snippets/survey/';
-        $this->config['assetsUrl'] = MODX_BASE_URL . $this->config['relativePath'];
-        $this->config['viewsDir'] = __DIR__ . '/views/';
+        $configFile = require 'config.php';
+
+        $this->config = $config + $configFile;
+
+        $this->lang = require dirname(__FILE__) . '/lang/' . $this->config['lang'] . '.php';
     }
 
     /**
-     * Вывод активных опросов во фронте
+     * Вывод активных опросов во фронтэнде или одного опроса по ID
      *
-     * @param string $tpl
-     * @param int $limit
-     * @param bool $random
+     * @param int $id ID опроса
+     * @param string $tpl Шаблон
+     * @param int $limit Кол-во опросов
+     * @param bool $random Случайная выборка опросов
      *
      * @return string
      */
-    public function render($tpl = null, $limit = 10, $random = false)
+    public function render($id = null, $tpl = null, $limit = 10, $random = false)
     {
-        $surveys = $this->getAllActiveSurveys((int) $limit, $random);
+        if ($id !== null) {
+            $surveys = array($id => $this->getActiveSurvey($id));
+        } else {
+            $surveys = $this->getAllActiveSurveys((int) $limit, $random);
+        }
 
         if (!$surveys) return '';
 
@@ -76,50 +80,26 @@ class Surveys
 
         $options = $this->getSurveyOptions($ids);
 
-        foreach ($surveys as &$s) {
-            $s['options'] = count($ids) > 1 ? $options[$s['id']] : $options;
-            $s['voted'] = false;
+        foreach ($surveys as $s) {
+            $s->options = count($ids) > 1 ? $options[$s->id] : $options;
         }
 
-        if (($user_id = $this->getUserId()) && $ids) {
+        if ($user_id = $this->getUserId()) {
             $query = $this->db->select('survey_id', $this->answers_tbl, "user_id = {$user_id} AND survey_id IN (" . implode(',', $ids) . ")");
 
             while ($answer = $this->db->getRow($query)) {
-                $surveys[$answer['survey_id']]['voted'] = true;
+                $surveys[$answer['survey_id']]->voted = true;
             }
-        }
-
-        if ($this->modx->documentObject['id'] == $this->modx->config['site_start']) {
-            $action = '/';
-        } else {
-            $action = $this->modx->makeUrl($this->modx->documentObject['id']);
         }
 
         $this->modx->regClientHTMLBlock('<script>window.jQuery || document.write(\'<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">\x3C/script>\');</script>');
         $this->modx->regClientStartupHTMLBlock('<link rel="stylesheet" href="/assets/modules/survey/assets/survey.css"/>');
         $this->modx->regClientHTMLBlock('<script src="/assets/modules/survey/assets/survey.js"></script>');
-        $this->modx->regClientHTMLBlock('<script>var Survey = new Surveys("' . $action . '");</script>');
-
-        $tpl = !empty($tpl) && is_string($tpl) ? $tpl : 'surveys';
+        $this->modx->regClientHTMLBlock('<script>var Survey = new Surveys("' . $this->config['connectorUrl'] . '");</script>');
 
         return $this->view($tpl, array(
-            'surveys' => $surveys,
-            'options' => $options,
-            'action' => $action
+            'surveys' => $surveys
         ));
-    }
-
-    public function handle()
-    {
-        if (isAjax() && isMethod('get')) {
-            echo $this->vote(
-                isset($_GET['survey']) ? $_GET['survey'] : null,
-                isset($_GET['option']) ? $_GET['option'] : null
-            );
-            die;
-        }
-
-        return $this->render();
     }
 
     /**
@@ -133,47 +113,52 @@ class Surveys
     public function vote($survey_id, $option_id)
     {
         if (!$user_id = $this->modx->getLoginUserID()) {
-            return $this->error($this->t('need_auth'));
+            return $this->t('need_auth');
         }
 
         if (!$survey_id = (int) $survey_id) {
-            return $this->error($this->t('survey_id_error'));
+            return $this->t('survey_id_error');
         }
 
         if (!$option_id = (int) $option_id) {
-            return $this->error($this->t('option_id_error'));
+            return $this->t('option_id_error');
         }
 
         $survey = $this->getActiveSurvey($survey_id);
 
+        if (!$survey) {
+            return $this->t('survey_error');
+        }
+
         if ($survey->isClosed()) {
-            return $this->error($this->t('survey_closed'));
+            return $this->t('survey_closed');
         }
 
         if (!$survey->isActive()) {
-            return $this->error($this->t('survey_error'));
+            return $this->t('survey_error');
         }
 
         if ($this->checkForAnswer($survey_id, $user_id)) {
-            return $this->error($this->t('already_answered'));
+            return $this->t('already_answered');
         }
 
         if (!$option = $this->getOption($option_id)) {
-            return $this->error($this->t('option_error'));
+            return $this->t('option_error');
         }
 
         if (!$this->addVote($survey_id, $option_id)) {
-            return $this->error($this->t('add_vote_error'));
+            return $this->t('add_vote_error');
         }
 
         $survey->options = $this->getSurveyOptions($survey_id);
         $survey->votes++;
 
-        return $this->success($this->t('success_voted'), array(
+        return array(
+            'message' => $this->t('success_voted'),
             'html' => $this->view('survey', array(
                 'survey' => $survey
             ))
-        ));
+        );
     }
 
     /**
@@ -288,6 +273,49 @@ class Surveys
         return $this->survey($survey);
     }
 
+    public function getSurveyWithRelations($id)
+    {
+        if (!$id = (int) $id) {
+            return null;
+        }
+
+        $query = $this->db->select('*', $this->surveys_tbl, "id = {$id}");
+
+        if (!$survey = $this->db->getRow($query)) {
+            return null;
+        }
+
+        $survey = $this->survey($survey);
+
+        $query = $this->db->select('*', $this->options_tbl, "survey_id = {$id}");
+
+        while ($row = $this->db->getRow($query)) {
+            $survey->options[$row['id']] = $this->option($row);
+        }
+
+        $query = $this->db->select('*', $this->answers_tbl, "survey_id = {$id}");
+
+        while ($row = $this->db->getRow($query)) {
+            $survey->options[$row['option_id']]->answers[$row['id']] = $this->answer($row);
+        }
+
+        $query = $this->db->query("
+        SELECT a.user_id as id, a.id as answer_id, a.option_id, u.fullname as name, u.email, us.username FROM {$this->answers_tbl} as a
+        LEFT JOIN {$this->modx->getFullTableName('web_user_attributes')} as u ON u.internalKey = a.user_id
+        LEFT JOIN {$this->modx->getFullTableName('web_users')} as us ON u.internalKey = us.id
+        WHERE a.survey_id = {$id}
+        ");
+
+        while ($row = $this->db->getRow($query)) {
+            $survey
+                ->options[$row['option_id']]
+                ->answers[$row['answer_id']]
+                ->user = $this->user($row);
+        }
+
+        return $survey;
+    }
+
     /**
      * Получение опроса по ID
      *
@@ -396,14 +424,14 @@ class Surveys
      *
      * @return array
      */
-    protected function getAllActiveSurveys($limit = 4, $random = false)
+    protected function getAllActiveSurveys($limit = 10, $random = false)
     {
         $order = $random ? 'RAND()' : 'created_at DESC';
         $query = $this->db->select('*', $this->surveys_tbl, 'active = 1', $order, (int) $limit);
 
         $surveys = array();
         while ($survey = $this->db->getRow($query)) {
-            $surveys[$survey['id']] = $survey;
+            $surveys[$survey['id']] = $this->survey($survey);
         }
 
         return $surveys;
@@ -427,14 +455,14 @@ class Surveys
         $options = array();
         if (count($ids) === 1) {
             while ($row = $this->db->getRow($query)) {
-                $options[] = $row;
+                $options[] = $this->option($row);
             }
         } else {
             while ($row = $this->db->getRow($query)) {
                 if (!isset($options[$row['survey_id']])) {
                     $options[$row['survey_id']] = array();
                 }
-                $options[$row['survey_id']][] = $row;
+                $options[$row['survey_id']][] = $this->option($row);
             }
         }
 
@@ -457,8 +485,13 @@ class Surveys
             $errors[] = $this->t('empty_title');
         }
 
-        if (empty($data['new_option']) || !is_array($data['new_option']) || count($data['new_option']) < 2) {
-            $errors[] = $this->t('min_options');
+        if (!isset($data['new_option']) || !is_array($data['new_option'])) {
+            $errors[] = $this->t('options_error');
+        } else {
+            $data['new_option'] = array_unique($data['new_option']);
+            if (count($data['new_option']) < 2) {
+                $errors[] = $this->t('min_options');
+            }
         }
 
         if ($errors) {
@@ -473,7 +506,7 @@ class Surveys
             'updated_at' => $this->getTimestamp()
         ), $this->surveys_tbl);
 
-        foreach ($data['new_option'] as $k => $o) {
+        foreach ($data['new_option'] as $k => &$o) {
             $this->db->insert(array(
                 'title' => $o,
                 'sort' => isset($data['new_option_sort'][$k]) ? (int) $data['new_option_sort'][$k] : $k,
@@ -533,33 +566,36 @@ class Surveys
             'description' => isset($data['description']) ? $data['description'] : '',
             'active' => isset($data['active']) ? 1 : 0,
             'updated_at' => $this->getTimestamp(),
-        ], $this->surveys_tbl, "id={$id}");
+        ], $this->surveys_tbl, "id = {$id}");
 
         $options = $this->getSurveyOptions($id);
+        $options_titles = array();
 
         foreach ($options as $o) {
-            $oid = 'id_' . $o['id'];
+            $oid = 'id_' . $o->id;
             if (isset($data['option'][$oid])) {
                 $this->db->update([
                     'title' => $data['option'][$oid],
-                    'sort' => isset($data['option_sort'][$oid]) ? $data['option_sort'][$oid] : $o['sort']
-                ], $this->options_tbl, "id={$o['id']}");
+                    'sort' => isset($data['option_sort'][$oid]) ? $data['option_sort'][$oid] : $o->sort
+                ], $this->options_tbl, "id = {$o->id}");
+                $options_titles[] = $o->title;
             } else {
-                $this->db->delete($this->options_tbl, "id={$o['id']}");
-                $this->db->delete($this->answers_tbl, "option_id={$o['id']}");
-                if ($o['votes'] > 0) {
-                    $this->db->update("votes = votes - {$o['votes']}", $this->surveys_tbl, "id={$id}");
+                $this->db->delete($this->options_tbl, "id = {$o->id}");
+                $this->db->delete($this->answers_tbl, "option_id = {$o->id}");
+                if ($o->votes > 0) {
+                    $this->db->update("votes = votes - {$o->votes}", $this->surveys_tbl, "id = {$id}");
                 }
             }
         }
 
         if (isset($data['new_option']) && count($data['new_option'])) {
             foreach ($data['new_option'] as $k => $o) {
-                $this->db->insert([
+                if (in_array($o, $options_titles)) continue;
+                $this->db->insert(array(
                     'title' => $o,
                     'sort' => isset($data['new_option_sort'][$k]) ? (int) $data['new_option_sort'][$k] : $k,
                     'survey_id' => $id
-                ], $this->options_tbl);
+                ), $this->options_tbl);
             }
         }
 
@@ -613,31 +649,6 @@ class Surveys
     }
 
     /**
-     * Получение информации об опросе для менеджера по ID
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    public function getSurveyInfo($id)
-    {
-        if (!intval($id)) {
-            return $this->error('Error');
-        }
-
-        if (!$survey = $this->getSurvey($id)) {
-            return $this->error('Опрос не найден');
-        }
-
-        $survey->options = $this->getSurveyOptions($id);
-        $users = $this->getSurveyUsersById($id);
-
-        return $this->success('', array(
-            'html' => $this->view('info', compact('survey', 'options', 'users'))
-        ));
-    }
-
-    /**
      * Получение всех пользователей голосовавших за опрос
      *
      * @param $id
@@ -649,7 +660,7 @@ class Surveys
         $users = array();
 
         $query = $this->db->query("
-        SELECT a.user_id, a.option_id, u.fullname as name, u.email, us.username FROM {$this->answers_tbl} as a
+        SELECT a.user_id as id, a.option_id, u.fullname as name, u.email, us.username FROM {$this->answers_tbl} as a
         LEFT JOIN {$this->modx->getFullTableName('web_user_attributes')} as u ON u.internalKey = a.user_id
         LEFT JOIN {$this->modx->getFullTableName('web_users')} as us ON u.internalKey = us.id
         WHERE a.survey_id = {$id}
@@ -660,12 +671,7 @@ class Surveys
                 $users[$row['option_id']] = array();
             }
 
-            $users[$row['option_id']][] = array(
-                'id' => $row['user_id'],
-                'name' => $row['name'],
-                'username' => $row['username'],
-                'email' => $row['email'],
-            );
+            $users[$row['option_id']][] = $this->user($row);
         }
 
         return $users;
@@ -724,7 +730,7 @@ class Surveys
         $sqlfile = $this->config['path'] . 'setup.sql';
 
         if (!file_exists($sqlfile) || !is_readable($sqlfile)) {
-            return 'Не найден установочный файл setup.sql или он недоступен для чтения';
+            return $this->t('setup.sql_does_not_exists');
         }
 
         $sql = str_replace('{prefix}', $tbl_prefix, file_get_contents($sqlfile));
@@ -783,34 +789,6 @@ class Surveys
         return $this->db->getRow($query) ? true : false;
     }
 
-    protected function response($data = array(), $option = 0)
-    {
-        return json_encode($data, $option);
-    }
-
-    public function error($message, $errors = array())
-    {
-        return $this->response(array(
-            'error' => true,
-            'message' => $message,
-            'errors' => $errors
-        ));
-    }
-
-    public function success($message, $data = null)
-    {
-        $response = array(
-            'error' => false,
-            'message' => $message
-        );
-
-        if ($data !== null) {
-            $response['data'] = $data;
-        }
-
-        return $this->response($response);
-    }
-
     public function survey($properties = array())
     {
         if (!class_exists('Survey')) {
@@ -818,6 +796,33 @@ class Surveys
         }
 
         return new Survey($properties);
+    }
+
+    public function user($properties = array())
+    {
+        if (!class_exists('SurveyUser')) {
+            require_once 'entity/SurveyUser.php';
+        }
+
+        return new SurveyUser($properties);
+    }
+
+    public function option($properties = array())
+    {
+        if (!class_exists('SurveyOption')) {
+            require_once 'entity/SurveyOption.php';
+        }
+
+        return new SurveyOption($properties);
+    }
+
+    public function answer($properties = array())
+    {
+        if (!class_exists('SurveyAnswer')) {
+            require_once 'entity/SurveyAnswer.php';
+        }
+
+        return new SurveyAnswer($properties);
     }
 
     /**

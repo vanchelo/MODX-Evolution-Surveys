@@ -1,0 +1,55 @@
+@font-face {
+	font-family: 'icomoon';
+	/*src:url('icomoon.eot?-o2o7kn');*/
+	/*src:url('icomoon.eot?#iefix-o2o7kn') format('embedded-opentype'),*/
+		/*src: url('icomoon.woff?-o2o7kn') format('woff');*/
+		src: url('icomoon.ttf?-o2o7kn') format('truetype');
+		/*src: url('icomoon.svg?-o2o7kn#icomoon') format('svg');*/
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-th-list-outline:before {
+	content: "\e603";
+}
+.icon-trash:before {
+	content: "\e600";
+}
+.icon-lock-open-outline:before {
+	content: "\e601";
+}
+.icon-user-outline:before {
+	content: "\e606";
+}
+.icon-lock-closed-outline:before {
+	content: "\e602";
+}
+.icon-info-large-outline:before {
+	content: "\e607";
+}
+.icon-edit:before {
+	content: "\e604";
+}
+.icon-document-add:before {
+	content: "\e608";
+}
+.icon-arrow-sync-outline:before {
+	content: "\e605";
+}
+.icon-social-at-circular:before {
+	content: "\e609";
+}
