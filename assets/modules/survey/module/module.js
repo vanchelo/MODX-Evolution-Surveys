@@ -113,17 +113,16 @@ var Survey = {
     addOption: function (btn) {
         var $btn = jQuery(btn),
             elem = $btn.parent().prev(),
-            sort = parseInt(elem.find('input').next().val()) || 0,
-            answer = jQuery('<li><input required type="text" name="new_option[]" /><input type="text" name="new_option_sort[]" value="0" /><span onclick="Survey.removeOption(this)">&times;</span></li>');
+            sort = parseInt(elem.find('input').last().val()) || 0,
+            answer = jQuery('<li><input required type="text" name="new_option[]" /><input type="hidden" name="new_option_sort[]" value="'+(sort + 1)+'" /><span onclick="Survey.removeOption(this)" class="remove-ico"></span><span class="move-ico"></span></li>');
 
-        answer.find('input').next().val(sort + 1);
-        answer.insertAfter(elem);
+        elem.append(answer);
     },
 
     removeOption: function (btn) {
         var $btn = jQuery(btn);
 
-        if ($btn.parent().parent().find('li').length > 2) {
+        if ($btn.parents('ul').find('li').length > 2) {
             $btn.parent().remove();
         }
     },
@@ -189,4 +188,40 @@ $.fn.serializeForm = function () {
 
     // return data
     return data;
-}
+};
+
+(function () {
+    var el = document.getElementById('options');
+
+    el && new Sortable(el, {
+        handle: ".move-ico", // Restricts sort start click/touch to the specified element
+        draggable: "li",   // Specifies which items inside the element should be sortable
+        animation: 150,
+
+        //onStart: function (evt) { /* dragging */ },
+        onEnd: function (evt) {
+            var itemEl = evt.item,
+                collection = itemEl.parentNode.children;
+
+            for (var i = 0; i < collection.length; i++) {
+                collection[i].children[1].value = i;
+            }
+        },
+
+        /*onAdd: function (evt){
+            var itemEl = evt.item;
+        },
+
+        onUpdate: function (evt){
+            var itemEl = evt.item;
+        },
+
+        onRemove: function (evt){
+            var itemEl = evt.item;
+        },
+
+        onFilter: function (evt){
+            var itemEl = evt.item;
+        }*/
+    });
+})();

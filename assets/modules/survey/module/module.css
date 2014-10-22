@@ -1,146 +1,161 @@
 body {
-	padding: 10px 0;
+    padding: 10px 0;
 }
 table th {
-	text-align: center;
-	vertical-align: middle;
-	padding: 4px 0;
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px 0;
 }
 .sectContent {
-	background-color: #fff;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	margin-top: 20px;
-	padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 10px;
 }
 ul.actionButtons:after {
-	clear: both;
-	content: "";
-	display: block;
-	float: none;
+    clear: both;
+    content: "";
+    display: block;
+    float: none;
 }
 ul.actionButtons {
-	margin: 10px 0;
-	padding: 0;
-	min-height: inherit;
-}
-.options ul > li span {
-	font-size: 25px;
-	line-height: 10px;
-	vertical-align: -3px;
-	cursor: default;
+    margin: 10px 0;
+    padding: 0;
+    min-height: inherit;
 }
 form .options input + input {
-	padding: 4px 0;
-	text-align: center;
-	width: 30px;
+    padding: 4px 0;
+    text-align: center;
+    width: 30px;
 }
 form textarea {
-	height: 75px;
-	width: 350px;
-	max-width: 350px;
+    height: 75px;
+    width: 350px;
+    max-width: 350px;
 }
 form input[type="text"] {
-	width: 350px;
+    width: 350px;
 }
 .options > ul {
-	list-style: none outside none;
-	margin: 0;
+    list-style: none outside none;
+    margin: 0;
 }
 .options > ul li {
-	list-style: none outside none;
-	margin: 0 0 5px;
+    list-style: none outside none;
+    margin: 0 0 5px;
+    transform: translate3d(0px, 0px, 0px);
+    position: relative;
 }
 button {
-	background: linear-gradient(#f5f5f5, #ddd) repeat scroll 0 0 rgba(0, 0, 0, 0);
-	border: 1px solid #008000;
-	border-radius: 3px;
-	cursor: pointer;
-	font: normal 12px Arial, sans-serif, monospace;
-	line-height: normal;
-	margin: 0 5px 3px 0;
-	min-height: 27px;
-	overflow: visible;
-	padding: 5px 2px 4px;
-	width: auto;
+    background: linear-gradient(#f5f5f5, #ddd) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #008000;
+    border-radius: 3px;
+    cursor: pointer;
+    font: normal 12px Arial, sans-serif, monospace;
+    line-height: normal;
+    margin: 0 5px 3px 0;
+    min-height: 27px;
+    overflow: visible;
+    padding: 5px 2px 4px;
+    width: auto;
 }
 button img {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 .fields {
-	border-collapse: collapse;
-	vertical-align: top;
+    border-collapse: collapse;
+    vertical-align: top;
 }
 .fields td {
-	vertical-align: top;
+    vertical-align: top;
 }
 .fields label {
-	display: block;
-	font-weight: bold;
+    display: block;
+    font-weight: bold;
 }
 .fields div {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 input[type="text"], textarea {
-	font: 12px Tahoma;
+    font: 12px Tahoma;
 }
 .options {
-	margin-left: 50px;
+    margin-left: 50px;
 }
 .preview > img {
-	border: 1px solid #aaa !important;
-	padding: 3px;
-	width: 276px;
+    border: 1px solid #aaa !important;
+    padding: 3px;
+    width: 276px;
 }
 .action_buttons > a {
-	font-size: 24px;
-	line-height: 24px;
-	padding-right: 1px;
-	text-decoration: none;
-	text-rendering: unset;
+    font-size: 24px;
+    line-height: 24px;
+    padding-right: 1px;
+    text-decoration: none;
+    text-rendering: unset;
 }
 .action_buttons > a:last-child {
-	border-right: medium none;
-	margin-right: 0;
-	padding-right: 0;
+    border-right: medium none;
+    margin-right: 0;
+    padding-right: 0;
 }
 .opt_progress {
-	background-color: #eee;
-	height: 6px;
+    background-color: #eee;
+    height: 6px;
 }
 .opt_progress > span {
-	background-color: green;
-	display: block;
-	height: 100%;
+    background-color: green;
+    display: block;
+    height: 100%;
 }
 .opt_users {
-	border-bottom: 1px dotted #ddd;
-	margin: 10px 0;
-	padding-bottom: 10px;
+    border-bottom: 1px dotted #ddd;
+    margin: 10px 0;
+    padding-bottom: 10px;
 }
 .option:last-child .opt_users {
-	border-bottom: none;
-	margin-bottom: 0;
-	padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 .option {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 #tabTemplate tbody td, .sectionBody td, .sectionBody th {
-	line-height: normal;
-	padding: 1px 5px;
-	text-align: left;
-	vertical-align: middle;
+    line-height: normal;
+    padding: 1px 5px;
+    text-align: left;
+    vertical-align: middle;
 }
 .sectionBody th {
-	background-color: transparent;
-	padding: 6px 7px;
-	vertical-align: middle;
-	border-bottom: 1px solid #555;
+    background-color: transparent;
+    padding: 6px 7px;
+    vertical-align: middle;
+    border-bottom: 1px solid #555;
 }
 thead {
-	background-color: transparent;
+    background-color: transparent;
 }
 .survey td {
-	vertical-align: top;
+    vertical-align: top;
+}
+.sortable-ghost {
+    opacity: 0.5;
+}
+.move-ico {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAA9ElEQVR4AdXQIUtzUQAG4Iex3TBEhyhYNQgGRVZm8Q8YBZNGgyiooF3r58JAERGMU4fCsMhQ+NgdcwabxV8g/g6DtxwGh1v3hFPO+8J5j1Gx6M6JRE5VA1Xb2pK88RmwmadS9pbFYUtdVFHZs55rjPvSs6cUe8y7K1Q8/Z1ZrSkBoACg6sK6BaE5rzpaEiHL2dRUKvUPYwZSPYfZ/KLAf7NizmwI3FoV0wzvmdZXw7dU3wMm/Eh9qKPhFIYrK7rhL1lyHsbDyqN9ifms0DGl5MWBiEmf7h2hrKXtkriCrhqAhh0R4fzhqdHKrpu8cag4tmZU/AL+xjuQ+v72bAAAAABJRU5ErkJggg==);
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+    vertical-align: middle;
+    cursor: move;
+}
+.remove-ico {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAA00lEQVR4Ae3BvStEAQAA8N+hE69HdHWSqMtiuE0GmxKum6TEWWREJhZKhMkfoC6TGHxMykA2H+WjS0+dxeBPsVree9nv9/NvDQOuVPUBKLpwLBSrakfFhxwYUldyYFWsLduY8SzQ78swzpTFCjyZw7JbkUnsO5GRoFvNBCrGseJGixS9PhXAmEftUmWcGwVLdqVz6AihrKw7i1Ksu9RkUF1Nl9CLsgQl91r1iIxY8KBNXqQg1qlZHV5NgTXXmu3ZEGvauzfzADZ9+1GUICfwV16nhl9psisN+pFbYQAAAABJRU5ErkJggg==);
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+    vertical-align: middle;
+    cursor: default;
 }

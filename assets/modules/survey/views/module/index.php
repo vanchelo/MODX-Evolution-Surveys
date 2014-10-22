@@ -24,11 +24,11 @@
         <td style="text-align:center"><?= $s->isClosed() ? $s->closed_at : 'нет' ?></td>
         <td style="text-align:center"><?= $app->t($s->isActive() ? 'published' : 'unpublished') ?></td>
         <td style="text-align:center" class="action_buttons">
-            <a title="<?= $app->t('remove') ?>" href="#" onclick="return Survey.delete(<?= $s->id ?>)"><span class="icon-trash"></span></a>
             <a title="<?= $app->t('edit') ?>" href="index.php?a=112&id=<?= $id ?>&action=update&survey=<?= $s->id ?>"><span class="icon-edit"></span></a>
             <a title="<?= $app->t($s->isClosed() ? 'close' : 'open') ?>" href="#" onclick="return Survey.close(<?= $s->id ?>)"><span class="icon-<?= $s->isClosed() ? 'lock-closed' : 'lock-open' ?>-outline"></span></a>
             <a title="<?= $app->t('reset') ?>" href="#" onclick="return Survey.reset(<?= $s->id ?>)"><span class="icon-arrow-sync-outline"></span></a>
             <a title="<?= $app->t('info') ?>" href="index.php?a=112&id=<?= $id ?>&action=info&survey=<?= $s->id ?>"><span class="icon-info-large-outline"></span></a>
+            <a title="<?= $app->t('remove') ?>" href="#" onclick="return Survey.delete(<?= $s->id ?>)"><span class="icon-trash"></span></a>
         </td>
     </tr>
     <?php endforeach ?>

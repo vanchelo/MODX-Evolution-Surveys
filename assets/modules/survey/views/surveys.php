@@ -6,7 +6,9 @@
 <div class="surveys">
     <?php foreach ($surveys as $s): ?>
     <div id="survey_<?= $s->id ?>" class="survey">
-        <div class="survey__header"><?= $s->title ?></div>
+        <div class="survey__header">
+            <?= $s->title ?>
+        </div>
         <?php if (!empty($s->description)): ?>
         <div class="survey__desc"><?= $s->description ?></div>
         <?php endif ?>
@@ -41,6 +43,7 @@
             </div>
             <?php endif ?>
         </div>
+        <div class="survey__voters">Всего голосов: <span><?= $s->votes ?></span></div>
         <?php if ($s->isClosed()): ?>
         <div class="survey__status">Голосвание окончено</div>
         <?php endif ?>

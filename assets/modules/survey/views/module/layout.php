@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title><?= $title ?> :: <?= $app->t('management') ?></title>
+
     <link href="media/style/<?= $modx->config['manager_theme'] ?>/style.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/assets/modules/survey/module/module.css" />
     <link rel="stylesheet" type="text/css" href="/assets/modules/survey/module/icons/icons.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript" src="/assets/modules/survey/module/module.js"></script>
 </head>
 <body class="survey_module">
 
@@ -17,5 +16,9 @@
     <?php include 'menu.php' ?>
     <div class="sectContent"><?= $content ?></div>
 </div>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/modules/survey/module/Sortable.min.js"></script>
+<script type="text/javascript" src="/assets/modules/survey/module/module.js"></script>
 </body>
 </html>

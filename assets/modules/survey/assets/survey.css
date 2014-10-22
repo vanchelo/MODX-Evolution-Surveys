@@ -79,3 +79,8 @@
     font-size: 1.1em;
     text-align: center;
 }
+.survey__voters {
+    margin: 0 -10px -10px;
+    padding: 10px;
+    text-align: right;
+}

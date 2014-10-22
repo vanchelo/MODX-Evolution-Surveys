@@ -24,17 +24,17 @@
             <td>
                 <div class="options">
                     <label><?= $app->t('options') ?></label>
-                    <ul>
+                    <ul id="options">
                         <?php if ($survey->options): ?>
                         <?php foreach($survey->options as $o): ?>
-                            <li><input required type="text" name="option[id_<?= $o->id ?>]" value="<?= $o->title ?>"/><input type="text" name="option_sort[id_<?= $o->id ?>]" value="<?= $o->sort ?>" /><span onclick="Survey.removeOption(this)">&times;</span></li>
+                            <li><input required type="text" name="option[id_<?= $o->id ?>]" value="<?= $o->title ?>"/><input type="hidden" name="option_sort[id_<?= $o->id ?>]" value="<?= $o->sort ?>" /><span class="remove-ico" onclick="Survey.removeOption(this)"></span><span class="move-ico"></span></li>
                         <?php endforeach ?>
                         <?php endif ?>
                         <?php if (!$survey->id): ?>
-                            <li><input required type="text" name="new_option[]" value=""/><input type="text" name="new_option_sort[]" value="0" /><span onclick="Survey.removeOption(this)">&times;</span></li>
+                            <li><input required type="text" name="new_option[]" value=""/><input type="hidden" name="new_option_sort[]" value="0" /><span class="remove-ico" onclick="Survey.removeOption(this)"></span><span class="move-ico"></span></li>
                         <?php endif ?>
-                        <li><button type="button" onclick="Survey.addOption(this)"><img alt="" src="media/style/<?= $modx->config['manager_theme'] ?>/images/icons/add.png"> <?= $app->t('add_option') ?></button></li>
                     </ul>
+                    <div class="button_add"><button type="button" onclick="Survey.addOption(this)"><img alt="" src="media/style/<?= $modx->config['manager_theme'] ?>/images/icons/add.png"> <?= $app->t('add_option') ?></button></div>
                 </div>
             </td>
         </tr>
