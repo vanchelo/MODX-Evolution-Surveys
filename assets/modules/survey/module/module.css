@@ -159,3 +159,10 @@ thead {
     vertical-align: middle;
     cursor: default;
 }
+#options > li:hover > span {
+    opacity: 1;
+}
+#options > li > span {
+    opacity: 0;
+    transition: opacity 0.2s ease 0s;
+}
