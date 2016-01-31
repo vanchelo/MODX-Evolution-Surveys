@@ -2,18 +2,33 @@
 
 class View
 {
+    /**
+     * @var string
+     */
     protected $viewsPath;
+    /**
+     * @var array
+     */
     protected $data = array();
 
+    /**
+     * View constructor.
+     *
+     * @param string $path
+     */
     function __construct($path = null)
     {
-        if ( ! $path) {
+        if (!$path) {
             throw new InvalidArgumentException('Views path is not defined');
         }
 
         $this->viewsPath = rtrim($path, '/') . '/';
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
     public function share($key, $value)
     {
         $this->data[$key] = $value;
@@ -23,15 +38,23 @@ class View
      * Получить отренедеренный шаблон с параметрами $data
      *
      * @param  string $template
-     * @param  array $data
+     * @param  array  $data
+     *
      * @return string
      */
     public function fetchPartial($template, $data = array())
     {
         try {
             ob_start();
-            if ($data) extract($data);
-            if ($this->data) extract($this->data);
+
+            if ($data) {
+                extract($data);
+            }
+
+            if ($this->data) {
+                extract($this->data);
+            }
+
             include $this->preparePath($template);
 
             return ob_get_clean();
@@ -44,7 +67,8 @@ class View
      * Вывести отренедеренный шаблон с параметрами
      *
      * @param  string $template
-     * @param  array $data
+     * @param  array  $data
+     *
      * @return void
      */
     public function renderPartial($template, $data = array())
@@ -57,7 +81,8 @@ class View
      * Шаблон с параметрами $data
      *
      * @param  string $template
-     * @param  array $data
+     * @param  array  $data
+     *
      * @return string
      */
     public function fetch($template, $data = array())
@@ -65,7 +90,7 @@ class View
         $content = $this->fetchPartial($template, $data);
 
         return $this->fetchPartial('layout', array(
-            'content' => $content
+            'content' => $content,
         ));
     }
 
@@ -74,7 +99,8 @@ class View
      * Шаблон с параметрами $data
      *
      * @param  string $template
-     * @param  array $data
+     * @param  array  $data
+     *
      * @return void
      */
     public function render($template, $data = array())
@@ -82,6 +108,11 @@ class View
         echo $this->fetch($template, $data);
     }
 
+    /**
+     * @param string $template
+     *
+     * @return mixed|string
+     */
     protected function preparePath($template = '')
     {
         $template = preg_replace('/[^a-z0-9._]+/is', '', (string) $template);
@@ -91,11 +122,17 @@ class View
         return $template;
     }
 
+    /**
+     * @param string $path
+     */
     public function setViewsPath($path = '')
     {
         $this->viewsPath = $path;
     }
 
+    /**
+     * @return string
+     */
     public function getViewsPath()
     {
         return $this->viewsPath;

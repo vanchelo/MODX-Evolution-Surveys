@@ -4,21 +4,26 @@
     font-size: 0.8em;
     padding: 3px;
 }
+
 .survey {
     box-shadow: 1px 1px 2px #aaa;
     margin-bottom: 12px;
     padding: 10px;
 }
+
 .survey__header {
     color: #742520;
     font-size: 1.2em;
     margin: 0 0 10px;
 }
+
 .survey__content {
 }
+
 .survey__option {
     margin-bottom: 10px;
 }
+
 .survey__desc {
     background-color: #f1f1f1;
     color: #777;
@@ -26,59 +31,72 @@
     margin: 0 -10px 10px;
     padding: 5px 10px;
 }
+
 .survey__buttons {
     text-align: center;
 }
+
 .survey__button {
     font-size: 16px;
     height: 36px;
     margin: 8px 0;
 }
+
 .survey__button--vote {
     width: 140px;
 }
+
 .survey__options input {
     float: left;
     margin: 4px 0 0;
 }
+
 .survey__options_list {
     list-style: none outside none;
     margin: 15px 0;
     padding: 0;
     width: 300px;
 }
+
 .survey__options_list_item {
     font-size: 14px;
     margin-bottom: 8px;
 }
+
 .survey__options label > span {
     display: block;
     overflow: hidden;
     padding-left: 12px;
 }
+
 .survey__option_progress {
     background-color: #eee;
     height: 11px;
     margin-top: 2px;
 }
+
 .survey__option_progress > span {
     background-color: #8e8b46;
     display: block;
     height: 11px;
 }
+
 .survey__option_title {
     font-weight: bold;
 }
+
 .survey__option_title span {
     display: inline;
     font-weight: normal;
     padding: 0;
     white-space: nowrap;
 }
+
 .survey__status {
     font-size: 1.1em;
     text-align: center;
 }
+
 .survey__voters {
     margin: 0 -10px -10px;
     padding: 10px;

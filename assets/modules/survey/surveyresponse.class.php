@@ -2,11 +2,27 @@
 
 class SurveyResponse
 {
+    /**
+     * @var bool
+     */
     protected $error;
+    /**
+     * @var string
+     */
     protected $message;
+    /**
+     * @var array
+     */
     protected $data;
 
-    function __construct($message = '', $error = false, array $data = array())
+    /**
+     * SurveyResponse constructor.
+     *
+     * @param string $message
+     * @param bool   $error
+     * @param array  $data
+     */
+    public function __construct($message = '', $error = false, array $data = array())
     {
         $this->data = $data;
         $this->error = $error;
@@ -65,7 +81,7 @@ class SurveyResponse
     /**
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         return $this->toJson(JSON_UNESCAPED_UNICODE);
     }
@@ -79,14 +95,14 @@ class SurveyResponse
     {
         return array(
             'error' => $this->error,
-            'message' => $this->message
+            'message' => $this->message,
         ) + $this->data;
     }
 
     /**
      * Convert the object to its JSON representation.
      *
-     * @param  int $options
+     * @param int $options
      *
      * @return string
      */
@@ -107,10 +123,14 @@ class SurveyResponse
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function display()
     {
         header('Content-Type: application/json; charset=UTF-8');
         echo $this->toJson();
+
         return null;
     }
 }

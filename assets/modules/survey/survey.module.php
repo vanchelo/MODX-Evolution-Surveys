@@ -1,4 +1,7 @@
-<?php defined('IN_MANAGER_MODE') or die('Error');
+<?php
+
+defined('IN_MANAGER_MODE') or die('Error');
+
 /** @var DocumentParser $modx */
 
 require __DIR__ . '/surveys.class.php';

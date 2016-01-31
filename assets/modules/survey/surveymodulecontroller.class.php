@@ -2,19 +2,31 @@
 
 class SurveyModuleController
 {
+    /**
+     * @var Surveys
+     */
     protected $app;
     /**
      * @var SurveyResponse
      */
     protected $response;
 
-    function __construct(Surveys $app)
+    /**
+     * SurveyModuleController constructor.
+     *
+     * @param Surveys $app
+     */
+    public function __construct(Surveys $app)
     {
         $this->app = $app;
         $this->response = $app->ajaxResponse();
+
         $app->view()->share('id', isset($_GET['id']) ? (int) $_GET['id'] : 0);
     }
 
+    /**
+     * @return string|View
+     */
     public function indexAction()
     {
         if ($this->app->isInstalled()) {
@@ -26,17 +38,23 @@ class SurveyModuleController
         }
 
         return $this->app->view('module.layout', array(
-            'content' => $this->app->view($tpl, $this->app->isInstalled() ? array('surveys' => $this->app->getAllSurveys()) : null),
+            'content' => $this->app->view($tpl,
+                $this->app->isInstalled() ? array(
+                    'surveys' => $this->app->getAllSurveys(),
+                ) : null),
             'title' => $title,
         ));
     }
 
+    /**
+     * @return string|SurveyResponse|View
+     */
     public function createAction()
     {
         if (!isMethod('post')) {
             return $this->app->view('module.layout', array(
                 'content' => $this->app->view('module.update', array(
-                    'survey' => $this->app->survey()
+                    'survey' => $this->app->survey(),
                 )),
                 'title' => $this->app->t('survey_creating'),
             ));
@@ -53,7 +71,11 @@ class SurveyModuleController
         return $this->response;
     }
 
-    protected function save() {
+    /**
+     * @return SurveyResponse
+     */
+    protected function save()
+    {
         $save = $this->app->updateSurvey($_POST);
 
         if (is_array($save)) {
@@ -67,40 +89,51 @@ class SurveyModuleController
         return $this->response;
     }
 
+    /**
+     * @return null|string|SurveyResponse|View
+     */
     public function updateAction()
     {
         if (isMethod('post')) {
             return $this->save();
         }
 
-        if (!isset($_GET['survey']) or !$id = (int) $_GET['survey']) {
+        if (!isset($_GET['survey']) || !($id = (int) $_GET['survey'])) {
             return null;
         }
 
         return $this->app->view('module.layout', array(
             'content' => $this->app->view('module.update', array(
-                'survey' => $this->app->getSurveyWithOptions($id)
+                'survey' => $this->app->getSurveyWithOptions($id),
             )),
             'title' => $this->app->t('survey_editing'),
         ));
     }
 
+    /**
+     * Delete survey
+     *
+     * @return SurveyResponse
+     */
     public function deleteAction()
     {
-        if (!isset($_GET['survey']) or !$id = (int) $_GET['survey']) {
+        if (!isset($_GET['survey']) || !($id = (int) $_GET['survey'])) {
             return $this->response->setMessage($this->app->t('survey_id_error'))->isError();
         }
 
         $delete = $this->app->deleteSurvey($id);
 
         return $this->response
-                ->isError(!$delete)
-                ->setMessage($this->app->t(!$delete ? 'not_exist' : 'success_deleted'));
+            ->isError(!$delete)
+            ->setMessage($this->app->t(!$delete ? 'not_exist' : 'success_deleted'));
     }
 
+    /**
+     * @return SurveyResponse
+     */
     public function closeAction()
     {
-        if (!isset($_GET['survey']) or !$id = (int) $_GET['survey']) {
+        if (!isset($_GET['survey']) || !($id = (int) $_GET['survey'])) {
             return $this->response->isError()->setMessage($this->app->t('survey_id_error'));
         }
 
@@ -115,9 +148,12 @@ class SurveyModuleController
         );
     }
 
+    /**
+     * @return SurveyResponse
+     */
     public function resetAction()
     {
-        if (!isset($_GET['survey']) or !$id = (int) $_GET['survey']) {
+        if (!isset($_GET['survey']) || !($id = (int) $_GET['survey'])) {
             return $this->response->isError()->setMessage($this->app->t('survey_id_error'));
         }
 
@@ -128,21 +164,27 @@ class SurveyModuleController
         ));
     }
 
+    /**
+     * @return string
+     */
     public function installAction()
     {
         $install = $this->app->install();
 
         return $this->app->view('module.layout', array(
             'content' => $this->app->view('module.install', array(
-                'message' => $install
+                'message' => $install,
             )),
             'title' => $this->app->t('installing'),
         ));
     }
 
+    /**
+     * @return null|string
+     */
     public function infoAction()
     {
-        if (!isset($_GET['survey']) or !$id = (int) $_GET['survey']) {
+        if (!isset($_GET['survey']) || !($id = (int) $_GET['survey'])) {
             return null;
         }
 
@@ -155,15 +197,14 @@ class SurveyModuleController
     }
 
     /**
-     * @param $action
+     * @param string $action
      *
      * @return null
      */
     public function run($action)
     {
         $action = $action . 'Action';
-        if ( ! method_exists($this, $action))
-        {
+        if (!method_exists($this, $action)) {
             return null;
         }
 
@@ -180,7 +221,8 @@ class SurveyModuleController
 
         if ($output instanceof SurveyResponse) {
             header('Content-Type: application/json; charset=UTF-8');
-            echo $output->toJson();die;
+            echo $output->toJson();
+            die;
         }
 
         return $output;

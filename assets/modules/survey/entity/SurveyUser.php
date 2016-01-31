@@ -2,12 +2,29 @@
 
 class SurveyUser
 {
+    /**
+     * @var int
+     */
     public $id;
+    /**
+     * @var string
+     */
     public $name = '';
+    /**
+     * @var string
+     */
     public $username = '';
+    /**
+     * @var string
+     */
     public $email = '';
 
-    function __construct(array $attributes = array())
+    /**
+     * SurveyUser constructor.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = array())
     {
         if ($attributes) {
             foreach ($attributes as $name => $value) {
@@ -18,6 +35,9 @@ class SurveyUser
         }
     }
 
+    /**
+     * @return string
+     */
     public function displayName()
     {
         return !empty($this->name) ? $this->name : $this->username;

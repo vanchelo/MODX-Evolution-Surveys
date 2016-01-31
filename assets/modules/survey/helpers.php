@@ -1,12 +1,13 @@
 <?php
+
 if (!function_exists('cleanArray')) {
     /**
      * Очистка и обеззаражевание массива
      *
-     * @param array $array Исходный массив
-     * @param bool $stripTags Удалять или нет теги
-     * @param bool $unsetEmpty Удалять или нет пустые ключи
-     * @param bool $unique Оставлять только уникальные значения
+     * @param array $array      Исходный массив
+     * @param bool  $stripTags  Удалять или нет теги
+     * @param bool  $unsetEmpty Удалять или нет пустые ключи
+     * @param bool  $unique     Оставлять только уникальные значения
      *
      * @return void
      */
@@ -17,6 +18,7 @@ if (!function_exists('cleanArray')) {
                 cleanArray($e, $stripTags, $unsetEmpty);
                 continue;
             }
+
             if ($stripTags) {
                 $e = strip_tags($e);
             }
@@ -52,7 +54,8 @@ if (!function_exists('e')) {
     /**
      * @see entities
      */
-    function e($string) {
+    function e($string)
+    {
         return entities($string);
     }
 }
@@ -65,7 +68,8 @@ if (!function_exists('isAjax')) {
      */
     function isAjax()
     {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ? true : false;
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
+               && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 }
 
@@ -79,6 +83,6 @@ if (!function_exists('isMethod')) {
      */
     function isMethod($method = 'get')
     {
-        return $_SERVER['REQUEST_METHOD'] === strtoupper($method);
+        return strtolower($_SERVER['REQUEST_METHOD']) === strtolower($method);
     }
 }
